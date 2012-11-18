@@ -80,7 +80,7 @@ blockSize = 16
 -- | 'padding' currently requires that the bitSize of @a@ divide the bitSize 
 -- of @w@
 -----------------------------------------------------------------------------
-padding :: (ShaData w, Bits a, Integral a) => [a] -> [[w]]
+padding :: (ShaData w, Num w, Bits a, Integral a) => [a] -> [[w]]
 padding x = unfoldr block $ paddingHelper x 0 (0::Int) (0::Integer)
  where
   block [] = Nothing
@@ -155,7 +155,7 @@ instance Hash Hash384 where
 instance Hash Hash224 where
   toOctets (Hash224 x0 x1 x2 x3 x4 x5 x6) = bitsToOctets =<< [x0, x1, x2, x3, x4, x5, x6]
 
-shaStep :: (ShaData w) => Hash8 w -> [w] -> Hash8 w
+shaStep :: (ShaData w, Num w) => Hash8 w -> [w] -> Hash8 w
 shaStep h m = (foldl' (flip id) h (zipWith mkStep3 ks ws)) `plus` h
  where
   ws = m++zipWith4 smallSigma (drop (blockSize-2) ws) (drop (blockSize-7) ws)
@@ -173,7 +173,7 @@ shaStep h m = (foldl' (flip id) h (zipWith mkStep3 ks ws)) `plus` h
 -- | Due to the limitations of 'padding', 'sha' currently requires that the
 -- bitSize of @a@ divide the bitSize of @w@
 -----------------------------------------------------------------------------
-sha :: (ShaData w, Bits a, Integral a) => Hash8 w -> [a] -> Hash8 w
+sha :: (ShaData w, Num w, Bits a, Integral a) => Hash8 w -> [a] -> Hash8 w
 sha h0 x = foldl' shaStep h0 $ padding x
 
 stringToOctets :: String -> [Word8]

@@ -23,7 +23,7 @@ import Data.Char
 
 -- Keys have certain capabilities.
 
-class LargeWord a where
+class (Num a) => LargeWord a where
    largeWordToInteger :: a -> Integer
    integerToLargeWord :: Integer -> a
    largeWordPlus :: a -> a -> a

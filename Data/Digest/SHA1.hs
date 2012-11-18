@@ -93,7 +93,7 @@ blockWord8sIn512 =
       g [] = Nothing
       g xs = Just (splitAt 64 xs)
 
-fromBytes :: (Bits a) => [a] -> a
+fromBytes :: (Bits a, Num a) => [a] -> a
 fromBytes input =
     let dofb accum [] = accum
         dofb accum (x:xs) = dofb ((shiftL accum 8) .|. x) xs
